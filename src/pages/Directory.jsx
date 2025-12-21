@@ -89,14 +89,14 @@ function Directory() {
   return (
     <div className="space-y-3">
       {/* Header and Filters - All in One Card */}
-      <div className="bg-white rounded-lg p-5 shadow-sm border border-gray-200">
+      <div className="p-5 bg-white border border-gray-200 rounded-lg shadow-sm">
         {/* Title and Metrics Row */}
-        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-6 gap-4">
+        <div className="flex flex-col gap-4 mb-6 lg:flex-row lg:justify-between lg:items-start">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Employee Directory</h1>
-            <p className="text-sm text-gray-600 mt-1">Manage and monitor all employees</p>
+            <p className="mt-1 text-sm text-gray-600">Manage and monitor all employees</p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row">
             <div className="rounded-lg p-4 border border-[#E5E7EB] sm:w-[320px]">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-[#4F46E51A] rounded-lg flex items-center justify-center">
@@ -123,9 +123,9 @@ function Directory() {
         </div>
 
         {/* Search and Filter Row */}
-        <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center mb-4">
-          <div className="flex-1 relative sm:max-w-xs">
-            <FiSearch className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+        <div className="flex flex-col items-stretch gap-3 mb-4 sm:flex-row sm:items-center">
+          <div className="relative flex-1 sm:max-w-xs">
+            <FiSearch className="absolute w-5 h-5 text-gray-400 left-3 top-3" />
             <input
               type="text"
               placeholder="Search"
@@ -134,12 +134,12 @@ function Directory() {
                 setSearchTerm(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-sm"
+              className="w-full py-2 pl-10 pr-4 text-sm bg-white border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm('')}
-                className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                className="absolute text-gray-400 right-3 top-3 hover:text-gray-600"
               >
                 <RxCross2 />
               </button>
@@ -154,7 +154,7 @@ function Directory() {
                 setSelectedDepartment(e.target.value);
                 setCurrentPage(1);
               }}
-              className="flex-1 sm:flex-none px-3 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 bg-white text-sm"
+              className="flex-1 px-3 py-2 pr-10 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg sm:flex-none focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option>All Departments</option>
               {departments.map((dept) => (
@@ -170,7 +170,7 @@ function Directory() {
                 setSelectedStatus(e.target.value);
                 setCurrentPage(1);
               }}
-              className="flex-1 sm:flex-none px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 bg-white text-sm"
+              className="flex-1 px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg sm:flex-none focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option>Status</option>
               <option>Invited</option>
@@ -183,7 +183,7 @@ function Directory() {
                 setSelectedEngagement(e.target.value);
                 setCurrentPage(1);
               }}
-              className="flex-1 sm:flex-none px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 bg-white text-sm"
+              className="flex-1 px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg sm:flex-none focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option>Engagement</option>
               <option>Active</option>
@@ -197,9 +197,9 @@ function Directory() {
 
        <div>
          {/* Action Buttons Row */}
-        <div className="flex flex-wrap items-center gap-3 p-2">
+        {/* <div className="flex flex-wrap items-center gap-3 p-2">
           <span className="text-sm text-gray-600">{filteredEmployees.length} Results</span>
-          <button className="flex items-center gap-2 px-4 py-2 border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors text-blue-600 font-medium text-sm">
+          <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 transition-colors border border-blue-300 rounded-lg hover:bg-blue-50">
             <FiRotateCw className="w-4 h-4" />
             <span className="hidden sm:inline">Update</span>
           </button>
@@ -217,10 +217,10 @@ function Directory() {
             <VscStarEmpty className="w-4 h-4" />
             <span className="hidden sm:inline">Saved</span>
           </button>
-        </div>
+        </div> */}
 
       {/* Table */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[1200px]">
             <thead className="border-b border-gray-200">
@@ -230,7 +230,7 @@ function Directory() {
                 </th>
                 <th className="px-6 py-1 text-left text-xs font-semibold text-gray-700 border-r border-gray-200 w-[202px]">Employee Name</th>
                 <th className="px-6 py-1 text-left text-xs font-semibold text-gray-700 border-r border-gray-200 w-[298px]">Department</th>
-                <th className="px-6 py-1 text-left text-xs font-semibold text-gray-700 border-r border-gray-200 w-[298px]">Role</th>
+                {/* <th className="px-6 py-1 text-left text-xs font-semibold text-gray-700 border-r border-gray-200 w-[298px]">Role</th> */}
                 <th className="px-5 py-1 text-left text-xs font-semibold text-gray-700 border-r border-gray-200 w-[176px]">Status</th>
                 <th className="px-6 py-1 text-left text-xs font-semibold text-gray-700 border-r border-gray-200 w-[176px]">Engagement</th>
                 <th className="px-6 py-1 text-left text-xs font-semibold text-gray-700 border-r border-gray-200 w-[155px]">Last Activity</th>
@@ -280,14 +280,14 @@ function Directory() {
                       </button>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600 border-r border-gray-200">
+                  {/* <td className="px-6 py-4 text-sm text-gray-600 border-r border-gray-200">
                     <div className="flex items-center justify-between">
                       {employee.role}
                       <button className="text-gray-400 hover:text-gray-600">
                         <RiFileCopyLine className="w-4 h-4" />
                       </button>
                     </div>
-                  </td>
+                  </td> */}
                   <td className="w-[48px] px-5 py-4 text-sm border-r border-gray-200 ">
                     <span className={`px-3 py-1 text-xs border border-[#F2F4F7] bg-white font-medium ${getStatusColor(employee.status)}`}>
                        ● {employee.status}
@@ -309,8 +309,8 @@ function Directory() {
         </div>
 
         {/* Pagination */}
-        <div className="bg-gray-50 border-t border-gray-200 px-3 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="text-xs sm:text-sm text-gray-600">
+        <div className="flex flex-col items-center justify-between gap-3 px-3 py-4 border-t border-gray-200 bg-gray-50 sm:px-6 sm:flex-row">
+          <span className="text-xs text-gray-600 sm:text-sm">
             {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredEmployees.length)} of {filteredEmployees.length} Results
           </span>
           <div className="flex items-center gap-2 sm:gap-3">
@@ -321,7 +321,7 @@ function Directory() {
             >
               <FiChevronLeft className="w-4 h-4" />
             </button>
-            <div className="flex gap-1 flex-wrap justify-center">
+            <div className="flex flex-wrap justify-center gap-1">
               {(() => {
                 const pageNumbers = [];
                 const maxVisiblePages = 5;

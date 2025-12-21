@@ -76,7 +76,7 @@ function Login() {
             className="text-lg sm:text-xl font-bold"
             style={{ color: 'var(--color-text-primary, #1f2937)' }}
           >
-            Koshpal HR
+            Koshpal
           </span>
         </div>
 
