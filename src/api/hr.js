@@ -1,4 +1,4 @@
-import { axiosInstance } from './axiosInstance';
+import { axiosInstance } from './axiosInstance.mjs';
 
 /**
  * Get all employees for the company

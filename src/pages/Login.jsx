@@ -91,6 +91,9 @@ function Login() {
           <p className="text-sm sm:text-base" style={{ color: 'var(--color-text-secondary, #6b7280)' }}>
             Sign in to access your HR dashboard
           </p>
+          <p className="text-xs mt-2" style={{ color: 'var(--color-text-secondary, #6b7280)' }}>
+            Demo: hr@abc.com / password123
+          </p>
         </div>
 
         {/* Form */}

@@ -8,6 +8,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    port: 5174,
+  },
   resolve: {
     alias: {
       react: path.resolve(__dirname, 'node_modules/react'),

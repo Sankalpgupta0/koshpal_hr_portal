@@ -1,3 +1,3 @@
-export { axiosInstance } from './axiosInstance';
+export { axiosInstance } from './axiosInstance.mjs';
 export * from './auth';
 export * from './hr';
