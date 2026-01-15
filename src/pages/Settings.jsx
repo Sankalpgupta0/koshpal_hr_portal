@@ -10,6 +10,8 @@ function Settings() {
   const { showToast } = useToast();
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+ 
+
   // Form state
   const [formData, setFormData] = useState({
     firstName: '',
@@ -27,6 +29,9 @@ function Settings() {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [removeImage, setRemoveImage] = useState(false)
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [profilePicture, setProfilePicture] = useState(null)
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -54,6 +59,11 @@ function Settings() {
         designation: profile.designation || '',
       };
       
+       // Set profile picture if available
+      if (profile.profilePhoto) {
+        setProfilePicture(profile.profilePhoto)
+      }
+
       setFormData(userData);
       setOriginalData(userData);
     } catch (error) {
@@ -128,11 +138,15 @@ function Settings() {
       setSaving(true);
       const fullName = `${formData.firstName} ${formData.lastName}`.trim();
       
-      await updateHrProfile({
-        fullName,
-        phone: formData.phone,
-        designation: formData.designation,
-      });
+      const fd = new FormData()
+      fd.append('fullName', fullName)
+      fd.append('phone', formData.phone)
+      fd.append('designation', formData.designation)
+      // Handle profile picture update
+      if (selectedFile) {
+        fd.append('image', selectedFile) //  FILE, not string
+      }
+      await updateHrProfile(fd);
       
       // Update localStorage cache with new data
       const userStr = localStorage.getItem('user');
@@ -175,6 +189,43 @@ function Settings() {
       navigate('/login');
     }
   };
+
+  const handleImageChange = (event) => {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  // Check file is image
+  if (!file.type.startsWith('image/')) {
+    showToast({ message: 'Please select an image file', type: 'error' });
+    return;
+  }
+
+  // Size check (5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    showToast({ message: 'Image size should be less than 5MB', type: 'error' });
+    return;
+  }
+
+  // Allowed formats
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+  if (!allowedTypes.includes(file.type)) {
+    showToast({ message: 'Only JPG, PNG, JPEG allowed', type: 'error' });
+    return;
+  }
+
+  // Save file
+  setSelectedFile(file);
+  setRemoveImage(false);
+
+  // Preview image
+  const reader = new FileReader();
+  reader.onload = () => {
+    setProfilePicture(reader.result); // ✅ NO "as string"
+  };
+  reader.readAsDataURL(file);
+};
+
+  
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -224,11 +275,21 @@ function Settings() {
             {/* Profile Photo Section */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-8 pb-8 border-b" style={{ borderColor: 'var(--color-border-primary, #e5e7eb)' }}>
               {/* Avatar */}
-              <div
-                className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold text-white"
-                style={{ backgroundColor: '#3b82f6' }}
-              >
-                <span>{getInitials(formData.firstName, formData.lastName)}</span>
+              <div className="w-20 h-20 rounded-full overflow-hidden flex items-center justify-center text-2xl font-bold text-white" style={{ backgroundColor: profilePicture ? 'transparent' : 'var(--color-primary)' }}>
+                {profilePicture ? (
+                  <img 
+                    src={profilePicture} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // If image fails to load, hide it and show initials
+                      e.currentTarget.style.display = 'none'
+                      setProfilePicture(null)
+                    }}
+                  />
+                ) : (
+                  <span>{getInitials(formData.firstName, formData.lastName)}</span>
+                )}
               </div>
 
               {/* Name and Email */}
@@ -244,6 +305,21 @@ function Settings() {
                     {formData.designation}
                   </p>
                 )}
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                  id="profile-image-input"
+                />
+                <button
+                  onClick={() => document.getElementById('profile-image-input')?.click()}
+                  className="px-4 py-2 rounded-lg text-sm font-semibold text-white hover:opacity-90 transition-opacity"
+                  style={{ backgroundColor: 'var(--color-primary)' }}
+                >
+                  Change Photo
+                </button>
               </div>
             </div>
 

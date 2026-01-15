@@ -76,16 +76,21 @@ export const getInsightsSummary = async () => {
  */
 export const getHrProfile = async () => {
   const response = await axiosInstance.get('/hr/profile');
+  // console.log('HR Profile Response:', response);
   return response.data;
 };
 
 /**
  * Update HR profile
  */
-export const updateHrProfile = async (updateData) => {
-  const response = await axiosInstance.patch('/hr/profile', updateData);
-  return response.data;
+export const updateHrProfile = async (formData) => {
+  return axiosInstance.patch('/hr/profile', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };
+
 
 /**
  * Get dashboard statistics
