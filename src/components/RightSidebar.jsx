@@ -89,14 +89,14 @@ function RightSidebar() {
       </div>
 
       {/* Alerts */}
-      <div className="rounded-lg p-6 shadow-sm border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border-primary)' }}>
-        <h3 className="text-h4 mb-4" style={{ color: 'var(--color-text-primary)' }}>Alerts</h3>
+      <div className="p-6 border rounded-lg shadow-sm" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border-primary)' }}>
+        <h3 className="mb-4 text-h4" style={{ color: 'var(--color-text-primary)' }}>Alerts</h3>
         {loading ? (
-          <div className="text-center py-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="py-4 text-center">
+            <div className="w-8 h-8 mx-auto border-b-2 border-blue-600 rounded-full animate-spin"></div>
           </div>
         ) : alerts.length === 0 ? (
-          <p className="text-caption text-center py-4" style={{ color: 'var(--color-text-secondary)' }}>
+          <p className="py-4 text-center text-caption" style={{ color: 'var(--color-text-secondary)' }}>
             No alerts at this time
           </p>
         ) : (
@@ -112,7 +112,7 @@ function RightSidebar() {
                   <div className="flex items-start gap-3">
                     <Icon className={`w-5 h-5 ${colors.icon} mt-0.5 flex-shrink-0`} />
                     <div className="flex-1">
-                      <h4 className="text-subtitle mb-1" style={{ color: 'var(--color-text-primary)' }}>
+                      <h4 className="mb-1 text-subtitle" style={{ color: 'var(--color-text-primary)' }}>
                         {alert.title}
                       </h4>
                       <p className="text-caption" style={{ color: 'var(--color-text-secondary)' }}>{alert.message}</p>
@@ -128,8 +128,8 @@ function RightSidebar() {
     
 
       {/* Data Freshness */}
-      <div className="rounded-lg p-6 shadow-sm border" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border-primary)' }}>
-        <h3 className="text-h4 mb-4" style={{ color: 'var(--color-text-primary)' }}>Data Freshness</h3>
+      {/* <div className="p-6 border rounded-lg shadow-sm" style={{ backgroundColor: 'var(--color-bg-card)', borderColor: 'var(--color-border-primary)' }}>
+        <h3 className="mb-4 text-h4" style={{ color: 'var(--color-text-primary)' }}>Data Freshness</h3>
         <div className="space-y-3 text-body-md">
           <div className="flex justify-between">
             <span style={{ color: 'var(--color-text-secondary)' }}>Last sync:</span>
@@ -144,7 +144,7 @@ function RightSidebar() {
             <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>200 employees</span>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
