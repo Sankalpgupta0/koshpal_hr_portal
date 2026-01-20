@@ -5,8 +5,11 @@ import { axiosInstance } from './axiosInstance.mjs';
  */
 export const loginHR = async (credentials) => {
   try {
-    const response = await axiosInstance.post('/auth/login', credentials);
-    const { accessToken, user } = response.data;
+    const response = await axiosInstance.post('/auth/login', {
+      ...credentials,
+      role: 'HR' // Specify HR role for unified login
+    });
+    const { user } = response.data;
     
     console.log('Login response:', response.data);
     
@@ -15,16 +18,20 @@ export const loginHR = async (credentials) => {
       throw new Error('Unauthorized: Only HR users can access this portal');
     }
     
+    // Store user data in localStorage (tokens are in httpOnly cookies)
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    }
+    
     return {
       message: 'Login successful',
       user: {
         id: user.id,
-        name: user.fullName || user.email,
+        name: user.name || user.email,
         email: user.email,
         role: user.role,
         companyId: user.companyId,
       },
-      token: accessToken,
     };
   } catch (error) {
     console.error('Login API error:', error);

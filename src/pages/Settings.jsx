@@ -75,10 +75,9 @@ function Settings() {
   }, [showToast]);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
     const userStr = localStorage.getItem('user');
     
-    if (!token || !userStr) {
+    if (!userStr) {
       navigate('/login');
       return;
     }

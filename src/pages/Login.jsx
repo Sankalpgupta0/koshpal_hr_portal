@@ -25,9 +25,16 @@ function Login() {
 
   // Check if already logged in
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      navigate('/dashboard');
+    const user = localStorage.getItem('user');
+    if (user) {
+      try {
+        const userData = JSON.parse(user);
+        if (userData.role === 'HR') {
+          navigate('/dashboard');
+        }
+      } catch (error) {
+        localStorage.removeItem('user');
+      }
     }
   }, [navigate]);
 
@@ -36,8 +43,8 @@ function Login() {
       const response = await loginHR({ email, password });
       
       console.log('Login successful:', response);
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
+      // User data already stored by loginHR function
+      // Tokens are in httpOnly cookies
       
       if (rememberMe) {
         localStorage.setItem('rememberMe', 'true');

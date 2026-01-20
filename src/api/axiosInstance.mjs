@@ -10,14 +10,11 @@ export const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-// Request interceptor - adds JWT token and CSRF token to all requests
+// Request interceptor - httpOnly cookies are automatically sent
 axiosInstance.interceptors.request.use(
   (config) => {
-    // Add JWT token from localStorage
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    // Cookies are automatically sent with withCredentials: true
+    // No need to manually add Authorization header
     
     console.log(`[HR Portal API] ${config.method?.toUpperCase()} ${config.url}`);
     return config;
