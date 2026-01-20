@@ -54,17 +54,5 @@ const ProtectedRoute = ({ children }) => {
 
   return <>{children}</>;
 };
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <div style={{ animation: 'spin 1s linear infinite', border: '2px solid #f3f3f3', borderTop: '2px solid #3498db', borderRadius: '50%', width: '40px', height: '40px' }}></div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return <>{children}</>;
-};
 
 export default ProtectedRoute;
