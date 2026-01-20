@@ -1,63 +1,59 @@
-import { Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import { axiosInstance } from '../api/axiosInstance.mjs';
-import { logout } from '../api/auth';
 
 const ProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('token');
-      const user = localStorage.getItem('user');
-
-      if (!token || !user) {
-        setIsAuthenticated(false);
-        setIsLoading(false);
-        return;
-      }
-
       try {
-        // Set the token in axios headers for this request
-        const tempAxios = axiosInstance;
-        tempAxios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-        // Verify token is still valid
-        const response = await tempAxios.get('/auth/me');
-        const userData = JSON.parse(user);
-
-        if (response.data && userData.role === 'HR') {
+        // Verify httpOnly cookie is valid by calling /me endpoint
+        const response = await axiosInstance.get('/auth/me');
+        
+        // Check if user has HR role
+        if (response.data && response.data.role === 'HR') {
+          // Store user data in localStorage for UI purposes
+          localStorage.setItem('user', JSON.stringify(response.data));
           setIsAuthenticated(true);
         } else {
-          setIsAuthenticated(false);
-          localStorage.removeItem('token');
+          // Wrong role - clear auth and stay on portal
+          console.log('Wrong role for HR portal');
           localStorage.removeItem('user');
+          setIsAuthenticated(false);
         }
       } catch (error) {
-        console.error('Token validation failed:', error?.response?.status, error?.message);
-        // Clear invalid tokens
-        localStorage.removeItem('token');
+        console.error('Authentication check failed:', error?.response?.status);
+        
+        // Clear localStorage
         localStorage.removeItem('user');
+        localStorage.removeItem('token');
         
-        // Try to logout on server side too
-        try {
-          await logout();
-        } catch (logoutError) {
-          console.log('Server logout failed, but continuing');
-        }
-        
+        // Not authenticated - stay on portal (will show login)
         setIsAuthenticated(false);
-      } finally {
-        setIsLoading(false);
       }
     };
 
     checkAuth();
   }, []);
 
-  if (isLoading) {
+  if (isAuthenticated === null) {
     return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Verifying authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+};
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <div style={{ animation: 'spin 1s linear infinite', border: '2px solid #f3f3f3', borderTop: '2px solid #3498db', borderRadius: '50%', width: '40px', height: '40px' }}></div>
       </div>

@@ -182,7 +182,6 @@ function Settings() {
   const handleLogout = async () => {
     try {
       await logout();
-      showToast('Logged out successfully', 'success');
       navigate('/login');
     } catch (error) {
       console.error('Logout error:', error);

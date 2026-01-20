@@ -12,7 +12,10 @@ function App() {
     <ToastProvider>
       <Router>
         <Routes>
+          {/* Public login route */}
           <Route path="/login" element={<Login />} />
+          
+          {/* All routes protected - unified login on koshpal.com */}
           <Route
             path="/"
             element={
@@ -26,7 +29,7 @@ function App() {
             <Route path="directory" element={<Directory />} />
             <Route path="settings" element={<Settings />} />
           </Route>
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
     </ToastProvider>
