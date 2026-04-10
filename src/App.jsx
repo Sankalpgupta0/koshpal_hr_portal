@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import Directory from './pages/Directory';
 import Login from './pages/Login';
+import ResetPassword from './pages/ResetPassword';
 import ProtectedRoute from './components/ProtectedRoute';
 import { ToastProvider } from './components/ToastContainer';
 
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           {/* Public login route */}
           <Route path="/login" element={<Login />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           
           {/* All routes protected - unified login on koshpal.com */}
           <Route

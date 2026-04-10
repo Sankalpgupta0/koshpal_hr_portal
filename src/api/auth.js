@@ -62,3 +62,46 @@ export const logout = async () => {
     localStorage.removeItem('user');
   }
 };
+
+/**
+ * Request OTP for password reset
+ */
+export const forgotPassword = async (email) => {
+  const response = await axiosInstance.post('/auth/forgot-password', {
+    email,
+    portal: 'HR',
+  });
+  return response.data;
+};
+
+/**
+ * Verify OTP for password reset
+ */
+export const verifyOtp = async (email, otp) => {
+  const response = await axiosInstance.post('/auth/verify-otp', {
+    email,
+    otp,
+  });
+  return response.data;
+};
+
+/**
+ * Reset password using temporary token from verifyOtp
+ */
+export const resetPasswordOtp = async (tempToken, newPassword) => {
+  const response = await axiosInstance.post(`/auth/reset-password/${tempToken}`, {
+    newPassword,
+  });
+  return response.data;
+};
+
+/**
+ * Change password for authenticated user
+ */
+export const changePassword = async (currentPassword, newPassword) => {
+  const response = await axiosInstance.patch('/auth/me/password', {
+    currentPassword,
+    newPassword,
+  });
+  return response.data;
+};

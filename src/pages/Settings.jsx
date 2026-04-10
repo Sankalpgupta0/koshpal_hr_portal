@@ -2,8 +2,9 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiSettings, FiUser, FiLogOut, FiMoon, FiSun } from 'react-icons/fi';
 import { getHrProfile, updateHrProfile } from '../api/hr';
-import { logout } from '../api/auth';
+import { logout, changePassword } from '../api/auth';
 import { useToast } from '../components/ToastContainer';
+import { FiLock, FiEye, FiEyeOff, FiShield } from 'react-icons/fi';
 
 function Settings() {
   const navigate = useNavigate();
@@ -32,6 +33,19 @@ function Settings() {
   const [removeImage, setRemoveImage] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
   const [profilePicture, setProfilePicture] = useState(null)
+
+  // Password change state
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+  const [showPasswords, setShowPasswords] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
+  const [passwordSaving, setPasswordSaving] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -124,6 +138,53 @@ function Settings() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handlePasswordInputChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const togglePasswordVisibility = (field) => {
+    setShowPasswords((prev) => ({ ...prev, [field]: !prev[field] }));
+  };
+
+  const handleUpdatePassword = async () => {
+    if (!passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
+      showToast('All password fields are required', 'error');
+      return;
+    }
+
+    if (passwordData.newPassword.length < 8) {
+      showToast('New password must be at least 8 characters long', 'error');
+      return;
+    }
+
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      showToast('Passwords do not match', 'error');
+      return;
+    }
+
+    try {
+      setPasswordSaving(true);
+      await changePassword(passwordData.currentPassword, passwordData.newPassword);
+      showToast('Password changed successfully! You will be logged out.', 'success');
+      
+      setPasswordData({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      });
+
+      setTimeout(() => {
+        handleLogout();
+      }, 2000);
+    } catch (error) {
+      const apiMessage = error.response?.data?.message || 'Failed to update password';
+      showToast(Array.isArray(apiMessage) ? apiMessage[0] : apiMessage, 'error');
+    } finally {
+      setPasswordSaving(false);
+    }
   };
 
   const handleSaveChanges = async () => {
@@ -461,6 +522,129 @@ function Settings() {
                 )}
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>
+            </div>
+          </div>
+
+          {/* Security & Password Section */}
+          <div
+            className="rounded-lg p-6 sm:p-8 mb-6"
+            style={{
+              backgroundColor: 'var(--color-bg-card, #ffffff)',
+              border: '1px solid var(--color-border-primary, #e5e7eb)',
+            }}
+          >
+            <div className="flex items-center gap-3 mb-8">
+              <FiShield className="w-6 h-6" style={{ color: '#3b82f6' }} />
+              <h2 className="text-lg font-bold" style={{ color: 'var(--color-text-primary, #1f2937)' }}>
+                Security
+              </h2>
+            </div>
+
+            <div className="space-y-6 max-w-2xl">
+              {/* Current Password */}
+              <div>
+                <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--color-text-primary, #1f2937)' }}>
+                  Current Password
+                </label>
+                <div className="relative">
+                  <FiLock className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--color-text-tertiary, #9ca3af)' }} />
+                  <input
+                    type={showPasswords.current ? 'text' : 'password'}
+                    name="currentPassword"
+                    value={passwordData.currentPassword}
+                    onChange={handlePasswordInputChange}
+                    className="w-full pl-10 pr-12 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-all"
+                    style={{
+                      backgroundColor: 'var(--color-input-bg, #f9fafb)',
+                      borderColor: 'var(--color-input-border, #e5e7eb)',
+                      color: 'var(--color-input-text, #1f2937)',
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => togglePasswordVisibility('current')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                    style={{ color: 'var(--color-text-tertiary, #9ca3af)' }}
+                  >
+                    {showPasswords.current ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* New & Confirm Password Row */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--color-text-primary, #1f2937)' }}>
+                    New Password
+                  </label>
+                  <div className="relative">
+                    <FiLock className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--color-text-tertiary, #9ca3af)' }} />
+                    <input
+                      type={showPasswords.new ? 'text' : 'password'}
+                      name="newPassword"
+                      value={passwordData.newPassword}
+                      onChange={handlePasswordInputChange}
+                      className="w-full pl-10 pr-12 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-all"
+                      style={{
+                        backgroundColor: 'var(--color-input-bg, #f9fafb)',
+                        borderColor: 'var(--color-input-border, #e5e7eb)',
+                        color: 'var(--color-input-text, #1f2937)',
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => togglePasswordVisibility('new')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                      style={{ color: 'var(--color-text-tertiary, #9ca3af)' }}
+                    >
+                      {showPasswords.new ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--color-text-primary, #1f2937)' }}>
+                    Confirm New Password
+                  </label>
+                  <div className="relative">
+                    <FiLock className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--color-text-tertiary, #9ca3af)' }} />
+                    <input
+                      type={showPasswords.confirm ? 'text' : 'password'}
+                      name="confirmPassword"
+                      value={passwordData.confirmPassword}
+                      onChange={handlePasswordInputChange}
+                      className="w-full pl-10 pr-12 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-all"
+                      style={{
+                        backgroundColor: 'var(--color-input-bg, #f9fafb)',
+                        borderColor: 'var(--color-input-border, #e5e7eb)',
+                        color: 'var(--color-input-text, #1f2937)',
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => togglePasswordVisibility('confirm')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                      style={{ color: 'var(--color-text-tertiary, #9ca3af)' }}
+                    >
+                      {showPasswords.confirm ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-4">
+                <button
+                  onClick={handleUpdatePassword}
+                  disabled={passwordSaving}
+                  className="px-6 py-3 rounded-lg text-sm font-semibold text-white hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+                  style={{ backgroundColor: '#3b82f6' }}
+                >
+                  {passwordSaving && (
+                    <div className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'white' }} />
+                  )}
+                  {passwordSaving ? 'Updating...' : 'Update Password'}
+                </button>
+              </div>
             </div>
           </div>
 

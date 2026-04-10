@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { loginHR } from '../api/auth';
 import { useToast } from '../components/ToastContainer';
 
@@ -193,13 +193,13 @@ function Login() {
                 Remember me
               </span>
             </label>
-            <a
-              href="#"
+            <Link
+              to="/reset-password"
               className="text-xs sm:text-sm font-medium whitespace-nowrap hover:opacity-80"
               style={{ color: 'var(--color-secondary, #8b5cf6)' }}
             >
               Forgot password?
-            </a>
+            </Link>
           </div>
 
           {/* Sign In Button */}
