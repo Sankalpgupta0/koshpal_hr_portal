@@ -3,6 +3,8 @@ import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import Directory from './pages/Directory';
+import Login from './pages/Login';
+import ResetPassword from './pages/ResetPassword';
 import ProtectedRoute from './components/ProtectedRoute';
 import { ToastProvider } from './components/ToastContainer';
 
@@ -25,6 +27,8 @@ function App() {
             <Route path="directory" element={<Directory />} />
             <Route path="settings" element={<Settings />} />
           </Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>

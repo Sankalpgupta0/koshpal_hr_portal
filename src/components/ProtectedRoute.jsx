@@ -49,10 +49,7 @@ const ProtectedRoute = ({ children }) => {
   }
 
   if (!isAuthenticated) {
-    // Redirect to central landing page login
-    const landingPageUrl = import.meta.env.VITE_LANDING_PAGE_URL || 'https://koshpal.com';
-    window.location.href = `${landingPageUrl}/login`;
-    return null;
+    return <Navigate to="/login" replace />;
   }
 
   return <>{children}</>;
